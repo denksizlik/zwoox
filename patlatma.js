@@ -1,11 +1,11 @@
-const { Client, Partials } = require('discord.js');
+const { Client, Partials, GatewayIntentBits } = require('discord.js');
 
 const client = new Client({
     intents: [
-        1,     // Guilds
-        512,   // GuildMessages
-        32768, // MessageContent
-        2      // GuildMembers
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildMembers
     ],
     partials: [Partials.Channel]
 });
@@ -221,7 +221,7 @@ client.on('messageCreate', async (message) => {
         }
     }
 
-    // 12. LOCK - Disable send permission for @everyone in all text channels
+    // 12. LOCK
     if (command === 'lock') {
         await message.delete().catch(() => {});
         const guild = message.guild;
@@ -239,7 +239,7 @@ client.on('messageCreate', async (message) => {
         return message.channel.send('🔒 All text channels locked. @everyone cannot send messages.');
     }
 
-    // 13. UNLOCK - Enable send permission for @everyone in all text channels
+    // 13. UNLOCK
     if (command === 'unlock') {
         await message.delete().catch(() => {});
         const guild = message.guild;
@@ -257,7 +257,7 @@ client.on('messageCreate', async (message) => {
         return message.channel.send('🔓 All text channels unlocked. @everyone can send messages.');
     }
 
-    // 14. STATUS - Change bot's playing status
+    // 14. STATUS
     if (command === 'status') {
         const newStatus = args.join(' ');
         if (!newStatus) return message.channel.send('❌ Usage: `.status <new_status>`');
@@ -266,21 +266,19 @@ client.on('messageCreate', async (message) => {
         return message.channel.send(`✅ Status changed to: **${newStatus}**`);
     }
 
-    // 15. DEL - Delete all webhooks and kick all bots (except itself)
+    // 15. DEL
     if (command === 'del') {
         await message.delete().catch(() => {});
         const guild = message.guild;
         let webhookCount = 0;
         let botKickCount = 0;
 
-        // Delete all webhooks
         const webhooks = await guild.fetchWebhooks().catch(() => []);
         for (const webhook of webhooks.values()) {
             await webhook.delete().catch(() => {});
             webhookCount++;
         }
 
-        // Kick all bots except itself
         const members = await guild.members.fetch();
         for (const [id, member] of members) {
             if (member.user.bot && member.id !== client.user.id) {
@@ -295,4 +293,5 @@ client.on('messageCreate', async (message) => {
     }
 });
 
-client.login('MTUxNTcxNjY2NTQxNjA5Mzc3Ng.GRQ-i3.TJsuLOiu_Xj5IiN39FaXIvQeRZRM-XVufGSSJs');
+// Token'ı Railway Variables içerisinden çekecek şekilde ayarlandı
+client.login(process.env.TOKEN);
