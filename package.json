@@ -6,5 +6,7 @@
   "scripts": {
     "start": "node patlatma.js"
   },
-  "dependencies": {}
+  "dependencies": {
+    "discord.js": "^14.14.0"
+  }
 }
