@@ -1,0 +1,10 @@
+{
+  "name": "patlatma-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "patlatma.js",
+  "scripts": {
+    "start": "node patlatma.js"
+  },
+  "dependencies": {}
+}
